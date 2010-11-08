@@ -3,3 +3,8 @@ Feinheit JS Lib
 ***************************
 
 JS Library for reusable scripts.
+
+Current modules:
+* Datafilter: Simple filter
+* Friends-Selector: Get Facebook Friends and select one
+* Wallposter: Posts to someones wall

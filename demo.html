@@ -1,0 +1,47 @@
+<html lang="{{ LANGUAGE_CODE }}" xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+    <link rel="stylesheet" href="{{ MEDIA_URL }}fh-lib/jquery.friends-selector.css" type="text/css" media="screen" />
+    <title>feinheit js lib demo</title>
+</head>
+<body>
+    <input id="filter" name="filter"></input>
+    <div id="friends-mailer">
+    </div>
+    <script id="friendTemplate" type="text/x-jquery-tmpl">
+        <a data-id="${id}" class="fb-friend"><img class="fb-friend-img" src="https://graph.facebook.com/${id}/picture">${name}</a>
+    </script>
+    <div id="post-to-wall">
+    </div>
+    <script id="wallpostTemplate" type="text/x-jquery-tmpl">
+        <div style="position:relative;">
+            <div class="wallpostOverlay ui-widget-overlay">
+                Bitte eine Freundin oder einen Freund auswählen
+            </div>
+            <img src="https://graph.facebook.com/${id}/picture">
+            <textarea name="message">Hallo ${name}</textarea>
+            <button name="senden">Senden</button>
+        </div>
+    </script>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}fh-lib/jquery.friends-selector.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}fh-lib/jquery.datafilter.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}fh-lib/jquery.wallposter.js"></script>
+<script type="text/javascript">
+$(function(){
+    // init wallposter
+    $('#post-to-wall').wallPoster();
+    
+    // init friendsselector & bind 'select' event to wallposter
+    $('#friends-mailer').friendsSelector().bind('select', function(event, friend) {
+        $('#post-to-wall').wallPoster('setFriend', friend);
+    })
+    
+    // init filter. use string to get late evaluated -> after fb has initialized properly
+    $('#filter').dataFilter("$('#friends-mailer').children()");
+    
+});
+</script>
+</body>
