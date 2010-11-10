@@ -8,7 +8,8 @@
     $.fn.wallPoster = function (method) {
         var settings = {
             'template' : $('#wallpostTemplate'),
-            'friend' : { id : 1, name: ''}
+            'friend' : { id : 1, name: ''},
+            'link' : 'http://www.feinheit.ch'
         }
         
         var methods = {
@@ -32,10 +33,16 @@
                     input.find('.wallpostOverlay').hide();
                     input.find('button').click(function() {
                         FB.api('/' + settings.friend.id + '/feed', 'post', {
-                            message : input.find('.message').val(),
-                            link : 'http://www.feinheit.ch'
+                            message : input.find('textarea[name="message"]').val(),
+                            link : settings.link
                         }, function(response) {
-                            console.log(response);
+                            if (!response || response.error) {
+                                alert('fehler beim senden des post')
+                            } else {
+                                $(this).trigger('wallPosted.wallPoster', response.id)
+                                settings.friend = 0;
+                                input = settings.template.tmpl(settings.friend).replaceAll(input);
+                            }
                         });
                     });
                 });
