@@ -5,7 +5,35 @@
  */
 
 (function( $ ){
-    $.fn.dataFilter = function(targets){
+    $.fn.dataFilter = function(method) {
+        var settings = {
+            'targets' : false
+        }
+        
+        var methods = {
+            init : function(options) {
+                if (options) {
+                    $.extend( settings, options )
+                }
+                if (settings.targets) {
+                    return this.each(function() {
+                        $(this).keyup(methods.filter);
+                    });
+                } else {
+                    $.error('you have to define the targets');
+                }
+            },
+            clear : function() {
+                $(this).attr('value', '');
+                targets.show();
+                return this;
+            },
+            filter : function(obj) {
+                var normal = $(this).attr('value');
+                filter(normal);
+                return this;
+            }
+        }
         
         function search_tokenizer(search_string) {
             result = Array(search_string.toLowerCase());
@@ -19,13 +47,14 @@
         }
         
         function filter(search){
-            search_tokens = search_tokenizer(search);
-            
             // targets can be a string or jq object. use string if you want to have
             // the jq function evaluatet when you press keys.
-            if (typeof(targets) == 'string') {
-                targets = eval(targets);
+            if (typeof(settings.targets) == 'string') {
+                targets = eval(settings.targets);
+            } else {
+                targets = settings.targets;
             }
+            search_tokens = search_tokenizer(search);
             
             targets.each(function(){
                 var name = $(this).tmplItem().data.name.toLowerCase();
@@ -50,11 +79,15 @@
             });
         };
         
-        return this.each(function() {
-            $(this).keyup(function (event) {
-                var normal = $(this).attr('value');
-                filter(normal);
-            });
-        });
+        
+        
+        // Method calling logic
+        if ( methods[method] ) {
+            return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
+        } else if ( typeof method === 'object' || ! method ) {
+            return methods.init.apply( this, arguments );
+        } else {
+            $.error( 'Method ' +  method + ' does not exist on jQuery.dataFilter');
+        } 
     }
 })( jQuery );
