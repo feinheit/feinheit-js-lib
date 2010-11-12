@@ -39,7 +39,7 @@
                 if (response.session) {
                     build(response)
                 } else {
-                    FB.login({perms: settings['perms']})
+                    FB.login(build, {perms: settings['perms']});
                     FB.Event.subscribe('auth.login', build);
                 }
             });
