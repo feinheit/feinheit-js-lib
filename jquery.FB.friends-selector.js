@@ -10,7 +10,8 @@
         var targets = this;
         
         var settings = {
-            'perms'         : 'email,publish_stream'
+            'perms'         : '',
+            'auto_login'    : false
         };
         
         var methods = {
@@ -39,7 +40,9 @@
                 if (response.session) {
                     build(response)
                 } else {
-                    FB.login(build, {perms: settings['perms']});
+                    if (settings.auto_login) {
+                        FB.login(build, {perms: settings['perms']});
+                    }
                     FB.Event.subscribe('auth.login', build);
                 }
             });
@@ -51,7 +54,6 @@
                 friends = response['data'];
                 targets.each(function(){
                     $(this).children().remove();
-                    $(this).trigger('friendsLoaded.friendsSelector', friends);
                     $('#friendTemplate').tmpl(friends).appendTo($(this));
                     
                     $(this).find('a.fb-friend').click(function(){
@@ -59,6 +61,8 @@
                         $(this).addClass('selected');
                         $(this).trigger('select.friendsSelector', [$(this).tmplItem().data])
                     });
+                    
+                    $(this).trigger('loaded', friends);
                 });
             })
         }
