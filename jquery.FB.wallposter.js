@@ -8,6 +8,7 @@
     $.fn.wallPoster = function(method) {
         var settings = {
             'template' : $('#wallpostTemplate'),
+            'postedTemplate' : $('#wallpostedTemplate'),
             'friend' : { id : 1, name: ''},
             'link' : 'http://www.feinheit.ch'
         }
@@ -47,6 +48,7 @@
                                     });
                             } else {
                                 element.trigger('posted', response);
+                                input.after(settings.postedTemplate.tmpl({ id : settings.friend.id, message : input.find('textarea[name="message"]').val() }));
                                 settings.friend = 0;
                                 input = settings.template.tmpl(settings.friend).replaceAll(input);
                             }

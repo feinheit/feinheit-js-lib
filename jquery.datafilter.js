@@ -16,7 +16,7 @@
                     $.extend( settings, options )
                 }
                 if (settings.targets) {
-                    return this.change(methods.filter);
+                    return this.keyup(methods.filter);
                 } else {
                     $.error('you have to define the targets');
                 }
