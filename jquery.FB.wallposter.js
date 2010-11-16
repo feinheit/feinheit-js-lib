@@ -10,7 +10,6 @@
             'template' : $('#wallpostTemplate'),
             'postedTemplate' : $('#wallpostedTemplate'),
             'friend' : { id : 1, name: ''},
-            'link' : 'http://www.feinheit.ch'
         }
         
         var methods = {
@@ -22,7 +21,10 @@
                     settings.template.tmpl(settings.friend).appendTo($(this));
                 })
             },
-            setFriend : function(friend) {
+            setFriend : function(friend, options) {
+                if ( options ) { 
+                     $.extend( settings, options );
+                }
                 if (typeof(friend) == 'object') {
                     settings.friend = friend
                 } else {
