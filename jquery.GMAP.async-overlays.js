@@ -17,42 +17,44 @@
 
 
 $(function(){
-    var latlng = new google.maps.LatLng(46.83, 8.1);
-    var myOptions = {
-      zoom: 7,
-      center: latlng,
-      mapTypeId: google.maps.MapTypeId.SATELLITE
-    };
-    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-    
-    var infowindow = new google.maps.InfoWindow({ 
-        content: '',
-        size: new google.maps.Size(50,50)
-    });
-    
-    
-    function bindWindow(marker, content) {
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.close();
-            infowindow.setContent(content);
-            infowindow.open(map,marker);
+    if ($('#map').length) {
+        var latlng = new google.maps.LatLng(46.83, 8.1);
+        var myOptions = {
+            zoom: 7,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+        };
+        var map = new google.maps.Map(document.getElementById("map"), myOptions);
+        
+        var infowindow = new google.maps.InfoWindow({
+            content: '',
+            size: new google.maps.Size(50, 50)
         });
-    }
-    
-    $.getJSON('/api/map/', function(data) {
-        for (i in data) {
-            item = data[i];
-            
-            var position = new google.maps.LatLng(item.latitude, item.longitude);
-            
-            var marker = new google.maps.Marker({
-               position: position,
-               map: map,
-               title: item.title,
-               icon: item.icon
+        
+        
+        function bindWindow(marker, content){
+            google.maps.event.addListener(marker, 'click', function(){
+                infowindow.close();
+                infowindow.setContent(content);
+                infowindow.open(map, marker);
             });
-            
-            bindWindow(marker, item.content)
         }
-    })
+        
+        $.getJSON('/api/map/', function(data){
+            for (i in data) {
+                item = data[i];
+                
+                var position = new google.maps.LatLng(item.latitude, item.longitude);
+                
+                var marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: item.title,
+                    icon: item.icon
+                });
+                
+                bindWindow(marker, item.content)
+            }
+        })
+    }
 });
