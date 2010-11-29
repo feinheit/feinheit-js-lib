@@ -40,12 +40,10 @@ $(function(){
             });
         }
         
-        $.getJSON('/api/map/', function(data){
-            for (i in data) {
-                item = data[i];
-                
+        function drawMarker(item) {
+            return (function() {
                 var position = new google.maps.LatLng(item.latitude, item.longitude);
-                
+                        
                 var marker = new google.maps.Marker({
                     position: position,
                     map: map,
@@ -54,7 +52,29 @@ $(function(){
                 });
                 
                 bindWindow(marker, item.content)
+            });
+        }
+        
+        $.getJSON('/api/map/', function(data){
+            all = data.length
+            for (i in data) {
+                
+                var wait = 0;
+                
+                if ((all - i) < 50) {
+                    wait = 500 * (all - i);
+                } 
+                
+                
+                var local = i;
+                var item = data[local];
+                
+                drawMarkerRef = drawMarker(item);
+                
+                var timeout = setTimeout(drawMarkerRef, wait)
             }
         })
     }
 });
+
+
